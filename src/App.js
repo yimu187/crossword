@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Input,Grid, List, Label, Modal} from 'semantic-ui-react';
+import {Input,Grid, List, Label, Modal,Responsive} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 const black = {width: '60px', height: '60px', backgroundColor: 'black'};
@@ -535,90 +535,96 @@ class App extends Component {
     }
 
     render(){
+        document.title = 'Bulmaca';
         return (
             <div className="App">
-                <Grid columns={3} doubling>
-                    <Grid.Column>
-                        {this.state.enteredChars.map((dataY, indexY) => {
-                            return (
-                                <div>
-                                    {dataY.map((item, indexX) => {
-                                        return (
-                                            item === -1
-                                                ? <Input id={indexY + '-' + indexX} transparent style={black} value={''}/>
-                                                :
-                                                <Input
-                                                    label={this.getLabelInfo(indexX, indexY)}
-                                                    labelPosition='left corner'
-                                                    id={indexY + '-' + indexX}
-                                                    transparent={this.getTransparent(indexX, indexY)}
-                                                    style={this.getCss(indexX, indexY)}
-                                                    onChange={this.onFieldValueChange}
-                                                    // onFocus={this.onInputFocus.bind(this, indexX, indexY)}
-                                                    ref={(input) => { this.inputs[indexY][indexX] = input }}
-                                                    value={item}
-                                                />
-                                        )
-                                    })}
+            <Responsive minWidth={1500}>
+            <Grid columns={3} doubling>
+        <Grid.Column>
+        {this.state.enteredChars.map((dataY, indexY) => {
+            return (
+                <div>
+                {dataY.map((item, indexX) => {
+                    return (
+                        item === -1
+                            ? <Input id={indexY + '-' + indexX} transparent style={black} value={''}/>
+                :
+                <Input
+                    label={this.getLabelInfo(indexX, indexY)}
+                    labelPosition='left corner'
+                    id={indexY + '-' + indexX}
+                    transparent={this.getTransparent(indexX, indexY)}
+                    style={this.getCss(indexX, indexY)}
+                    onChange={this.onFieldValueChange}
+                    // onFocus={this.onInputFocus.bind(this, indexX, indexY)}
+                    ref={(input) => { this.inputs[indexY][indexX] = input }}
+                    value={item}
+                    />
+                )
+                })}
 
-                                </div>
-                            )
-                        })}
-                    </Grid.Column>
-                    <Grid.Column>
+        </div>
+        )
+        })}
+    </Grid.Column>
+        <Grid.Column>
 
-                        <List>
-                            {this.state.questionsX.map((question, index) => {
-                                return(
-                                    this.state.clickedXIndex > 0 && index === this.state.clickedXIndex
-                                        ?
-                                        <List.Item onClick={this.onXItemClicked.bind(this, index)}>
-                                            <Label> {question.sn + ' ' + question.s} </Label>
-                                        </List.Item>
-                                        :
-                                        <List.Item onClick={this.onXItemClicked.bind(this, index)}>{question.sn + ' ' + question.s}</List.Item>
-                                )
-                            })}
-                        </List>
+        <List>
+        {this.state.questionsX.map((question, index) => {
+            return(
+                    this.state.clickedXIndex > 0 && index === this.state.clickedXIndex
+                        ?
+                <List.Item onClick={this.onXItemClicked.bind(this, index)}>
+        <Label> {question.sn + ' ' + question.s} </Label>
+            </List.Item>
+        :
+        <List.Item onClick={this.onXItemClicked.bind(this, index)}>{question.sn + ' ' + question.s}</List.Item>
+        )
+        })}
+    </List>
 
-                    </Grid.Column>
-                    <Grid.Column>
+        </Grid.Column>
+        <Grid.Column>
 
-                        <List>
-                            {this.state.questionsY.map((question, index) => {
-                                return(
-                                    this.state.clickedYIndex > 0 && index === this.state.clickedYIndex
-                                        ?
-                                        <List.Item onClick={this.onYItemClicked.bind(this, index)}>
-                                            <Label> {question.sn + ' ' + question.s} </Label>
-                                        </List.Item>
-                                        :
-                                        <List.Item onClick={this.onYItemClicked.bind(this, index)}>{question.sn + ' ' + question.s}</List.Item>
-                                )
+        <List>
+        {this.state.questionsY.map((question, index) => {
+            return(
+                    this.state.clickedYIndex > 0 && index === this.state.clickedYIndex
+                        ?
+                <List.Item onClick={this.onYItemClicked.bind(this, index)}>
+        <Label> {question.sn + ' ' + question.s} </Label>
+            </List.Item>
+        :
+        <List.Item onClick={this.onYItemClicked.bind(this, index)}>{question.sn + ' ' + question.s}</List.Item>
+        )
 
-                            })}
-                        </List>
+        })}
+    </List>
 
-                    </Grid.Column>
-                </Grid>
+        </Grid.Column>
+        </Grid>
 
-                <Modal  open={this.state.modelWindowOpen}
-                        centered={false}
-                        onClose={this.onModalWindowClose}
-                        size={'tiny'}
-                >
-                    <Modal.Header>Çözüldü</Modal.Header>
-                    <Modal.Content>
-                        <Modal.Description>
-                            <p>
-                                Bulmaca çözüldü. Tebrikler
-                            </p>
-                        </Modal.Description>
-                    </Modal.Content>
-                </Modal>
+        <Modal  open={this.state.modelWindowOpen}
+        centered={false}
+        onClose={this.onModalWindowClose}
+        size={'tiny'}
+            >
+            <Modal.Header>Çözüldü</Modal.Header>
+            <Modal.Content>
+            <Modal.Description>
+            <p>
+            Bulmaca çözüldü. Tebrikler
+        </p>
+        </Modal.Description>
+        </Modal.Content>
+        </Modal>
+        </Responsive>
 
-            </div>
-        );
+        <Responsive maxWidth={1500}>
+            <h1 style={{'text-align' : 'center'}}> 1500 Piksel genişliğinde veya üstünde olmayan cihazlarda kullanmayınız </h1>
+        </Responsive>
+        </div>
+    );
     }
 
 }
