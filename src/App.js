@@ -1,45 +1,12 @@
 import React, {Component} from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import Crossword from './components/Crossword';
+import axios from 'axios';
 
 const standart = {width: '60px', height: '60px'};
 const selected = {width: '60px', height: '60px', backgroundColor: '#B3B3B3'};
 const success = {width: '60px', height: '60px', backgroundColor: 'green'};
 
-// const questionsDataX = [
-//     {s:'Soldan Sağa',sn:'', c:-1, ybas: -1, ybit: -1, xbas: -1, xbit:-1},
-//     {s:'Gırtlaktaki Aşırı ve Kronik İltihap', sn:1, c:'LARENJİT', ybas: 0, ybit: 0, xbas: 0, xbit:7},
-//     {s:'Jupiterin bir uydusu', sn:2, c:'ELARA', ybas: 1, ybit: 1, xbas: 0, xbit:4},
-//     {s:'Helyumun simgesi', sn:3, c:'HE', ybas: 1, ybit: 1, xbas: 6, xbit:7},
-//     {s:'Kesilen hayvanın böbrek, dalak, ciğer gibi iç organlarıyla baş ve ayakları',sn:4 ,c:'SAKATAT', ybas: 2, ybit: 2, xbas: 0, xbit:6},
-//     {s:'Bağırsaklar', sn:5, c:'EMA', ybas:3, ybit: 3, xbas: 0, xbit:2},
-//     {s:'Uzak',c:'IRAK', sn:6, ybas: 3, ybit: 3, xbas: 4, xbit:7},
-//     {s:'“...gibi” (Çok yumuşak, yumuşacık)', sn:7, c:'PAMUK', ybas: 4, ybit: 4, xbas: 0, xbit:4},
-//     {s:'Rutenyum Simgesi', sn:8, c:'RU', ybas: 4, ybit: 4, xbas: 6, xbit:7},
-//     {s:'En kısa zaman', sn:9, c:'AN', ybas: 5, ybit: 5, xbas: 0, xbit:1},
-//     {s:'Dili Tutulmuş', sn:10, c:'LAL', ybas: 5, ybit: 5, xbas: 3, xbit:5},
-//     {s:'Gidilen yol üzerinde olmayan', sn:11, c:'SAPA', ybas: 6, ybit: 6, xbas: 0, xbit:3},
-//     {s:'Yapma, Etme', sn:12, c:'İKA', ybas: 6, ybit: 6, xbas: 5, xbit:7},
-//     {s:'Davet etmek, çağırmak', sn:13, c:'OKUMAK', ybas: 7, ybit: 7, xbas: 2, xbit:7}
-//
-// ];
-//
-// const questionsDataY = [
-//     {s: 'Yukarıdan Aşağıya', sn:'', c:-1, ybas: -1, ybit: -1, xbas: -1, xbit:-1},
-//     {s:'Bir sınırdan geçebilmek için verilen yazılı izin', sn:1, c:'LESEPASE', ybas: 0, ybit: 7, xbas: 0, xbit:0},
-//     {s:'Büyük balıkçı kayığı', sn:14, c:'ALAMANA', ybas: 0, ybit: 6, xbas: 1, xbit:1},
-//     {s:'Sayıları göstermek için kullanılan işaretlerin her biri', sn:15, c:'RAKAM', ybas: 0, ybit: 4, xbas: 2, xbit:2},
-//     {s:'İtalyada bir nehir', sn:16, c:'PO', ybas: 6, ybit: 7, xbas: 2, xbit:2},
-//     {s:'Eski dilde otlar', sn:17, c:'ERA', ybas: 0, ybit: 2, xbas: 3, xbit:3},
-//     {s:'Haberci', sn:18, c:'ULAK', ybas: 4, ybit: 7, xbas: 3, xbit:3},
-//     {s:'Düzgün iyi konuşma yeteneği', sn:19, c:'NATIKA', ybas: 0, ybit: 5, xbas: 4, xbit:4},
-//     {s:'Hicap',sn:20, c:'AR', ybas: 2, ybit: 3, xbas: 5, xbit:5},
-//     {s:'Misket Limonu', sn:21, c:'LİM', ybas: 5, ybit: 7, xbas: 5, xbit:5},
-//     {s:'İkaz Uyar', sn:22, c:'İHTAR', ybas: 0, ybit: 4, xbas: 6, xbit:6},
-//     {s:'Kiloamper kısaltması', sn:23, c:'KA', ybas: 6, ybit: 7, xbas: 6, xbit:6},
-//     {s:'Tellür simgesi', sn:24, c:'TE', ybas: 0, ybit: 1, xbas: 7, xbit:7},
-//     {s:'İşitme organı', sn:25, c:'KULAK', ybas: 3, ybit: 7, xbas: 7, xbit:7}
-// ];
 
 const questionsDataX = [
     {s:'Soldan Sağa',sn:'', c:-1, ybas: -1, ybit: -1, xbas: -1, xbit:-1},
@@ -87,35 +54,80 @@ class App extends Component {
         clickedXIndex : -1,
         clickedYIndex : -1,
         modelWindowOpen: false,
+        recordId: -1
     };
 
     componentDidMount() {
-        const enteredChars = this.generateChars(questionsDataX, questionsDataY, false);
+        var me=this;
+        axios.get('https://ltkbv3ol92.execute-api.eu-central-1.amazonaws.com/test/crossword')
+            .then(function (response) {
+                // handle success
+                console.log(response);
+                const data = response.data;
+                const count = data.Count;
 
-        // const maxX = this.getMaxXNum(questionsDataX);
-        // const maxY = this.getMaxYNum(questionsDataY);
+                if(count > 0){
+                    const item = data.Items[0];
 
-        // this.inputs = Array(maxY).fill(null).map(()=>Array(maxX).fill(null))
+                    const recordId = item.recordId;
+                    const questionsX = item.questionsX;
+                    const qDatasX = me.generateQuestionData(questionsX);
+                    const questionsY = item.questionsY;
+                    const qDatasY = me.generateQuestionData(questionsY);
 
-        this.setState(
-            {
-                //     [
-                //     ['L', 'A', 'R', 'E', 'N', 'J', 'İ', 'T'],
-                //     ['E', 'L', 'A', 'R', 'A', -1, 'H', 'E'],
-                //     ['S', 'A', 'K', 'A', 'T', 'A', 'T', -1],
-                //     ['E', 'M', 'A', -1, 'I', 'R', 'A', 'K'],
-                //     ['P', 'A', 'M', 'U', 'K', -1, 'R', 'U'],
-                //     ['A', 'N', -1, 'L', 'A', 'L', -1, 'L'],
-                //     ['S', 'A', 'P', 'A', -1, 'İ', 'K', 'A'],
-                //     ['E', -1, 'O', 'K', 'U', 'M', 'A', 'K']
-                // ],
-                enteredChars : enteredChars,
-                questionsX: questionsDataX,
-                questionsY: questionsDataY,
-                clickedXIndex : -1,
-                clickedYIndex : -1,
+                    const enteredChars = me.generateChars(questionsDataX, questionsDataY, false);
+                    me.setState(
+                        {
+                            enteredChars : enteredChars,
+                            questionsX: qDatasX,
+                            questionsY: qDatasY,
+                            clickedXIndex : -1,
+                            clickedYIndex : -1,
+                            recordId
+                        }
+                    )
+                }
+
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }
+
+    generateQuestionData = (questions) => {
+        let qDatas = [];
+        const list = questions["L"];
+        for (let i = 0; i < list.length; i++) {
+            let qData = list[i];
+            const mapObj = qData["M"];
+
+            const sObj = mapObj.s;
+            const s = sObj["S"];
+            const cObj = mapObj.c;
+            const c = cObj["S"];
+            const snObj = mapObj.sn;
+            const sn = parseInt(snObj["S"]);
+            const xbasObj = mapObj.xbas;
+            const xbas = parseInt(xbasObj["S"]);
+            const xbitObj = mapObj.xbit;
+            const xbit = parseInt(xbitObj["S"]);
+            const ybasObj = mapObj.ybas;
+            const ybas = parseInt(ybasObj["S"]);
+            const ybitObj = mapObj.ybit;
+            const ybit = parseInt(ybitObj["S"]);
+
+            const qDataX = {
+                s, sn, c, xbas, xbit, ybas, ybit
             }
-        )
+
+            qDatas.push(qDataX);
+        }
+
+        return qDatas;
     }
 
     generateChars = (questionsDataX, questionsDataY) => {
