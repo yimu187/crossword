@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import Header from "../solve";
+import Header from "../Solve";
 import Crossword from '../../components/Crossword';
 import {Segment, Button, Modal, Form} from 'semantic-ui-react';
 import axios from 'axios';
@@ -649,7 +649,11 @@ class Add extends Component{
         return(
             <div>
                 <ToastContainer/>
-                <Header setActiveTab={this.props.setActiveTab}/>
+                <Header onSignOutClick={this.props.onSignOutClick}
+                        authUser={this.props.authUser}
+                        authUserName={this.props.authUserName}
+                        authUserFamilyName={this.props.authUserFamilyName}
+                />
 
                 <Crossword
                     getLabelInfo={this.getLabelInfo}

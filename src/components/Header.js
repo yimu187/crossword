@@ -8,10 +8,8 @@ const Header = (props) => {
     const userMenu = (
         <React.Fragment>
             <Responsive as={Item.Content} minWidth={768} verticalAlign="middle">
-                {/*<div className="user-name">{props.user != null ? props.user.nameAndSurname : ""}</div>*/}
-                {/*<span className="user-role">{props.user != null ? props.user.service : ""}</span>*/}
-                <div className="user-name">Murat YILMAZ</div>
-                <span className="user-role">Guru</span>
+                <div>{props.authUserName + ' ' + props.authUserFamilyName}</div>
+                <span>{props.authUser}</span>
             </Responsive>
         </React.Fragment>
     );
@@ -20,14 +18,12 @@ const Header = (props) => {
         const url = '/coz';
         var win = window.open(url, '_self');
         win.focus();
-        props.setActiveTab('solve');
     }
 
     const onAddItemClick = () => {
         const url = '/ekle';
         var win = window.open(url, '_self');
         win.focus();
-        props.setActiveTab('add');
     }
 
     return (
@@ -57,7 +53,9 @@ const Header = (props) => {
                             {userMenuOptions.map(option => (
                                 <Dropdown.Item
                                     // onClick={this.openLoggoutTab}
-                                    key={option.key} {...option} />
+                                    key={option.key} {...option}
+                                    onClick={props.onSignOutClick}
+                                />
                             ))}
                         </Dropdown.Menu>
                     </Dropdown.Menu>

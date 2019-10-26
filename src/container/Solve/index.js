@@ -472,7 +472,11 @@ class Solve extends Component {
     render(){
         return (
             <div>
-                <Header setActiveTab={this.props.setActiveTab}/>
+                <Header onSignOutClick={this.props.onSignOutClick}
+                        authUser={this.props.authUser}
+                        authUserName={this.props.authUserName}
+                        authUserFamilyName={this.props.authUserFamilyName}
+                />
                 <Crossword
                     getLabelInfo={this.getLabelInfo}
                     getTransparent={this.getTransparent}
